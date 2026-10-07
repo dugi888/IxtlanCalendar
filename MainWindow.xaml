@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:IxtlanCalendar"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Margin="10">
 
         <Grid>
             <Grid.RowDefinitions>
@@ -19,7 +19,16 @@
             
             <!-- COMMANDS PANEL -->
             <Grid >
-                <Label> INPUTS </Label>
+                <Border Width="200" Height="100">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="Red" Offset="0"/>
+                            <GradientStop Color="White" Offset="0.40"/>
+                            <GradientStop Color="White" Offset="0.60"/>
+                            <GradientStop Color="Red" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
             </Grid>
             
             
@@ -31,11 +40,10 @@
                 >
                 <UniformGrid Columns="7" Rows="1" x:Name="WeekDaysGrid" />
             </Border>
-            <!-- Dates -->
             
-            <Grid x:Name="CalendarGrid" Grid.Row="2">
-                <Label> Dates </Label>
-            </Grid>
+            <!-- Dates -->
+            <UniformGrid Grid.Row="2" Columns="7" Rows="6" x:Name="DatesGrid" />
+            
             
             
             
