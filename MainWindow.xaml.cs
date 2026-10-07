@@ -16,8 +16,26 @@ namespace IxtlanCalendar;
 /// </summary>
 public partial class MainWindow : Window
 {
+    private List<string> WeekDays { get; set; } = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+
     public MainWindow()
     {
         InitializeComponent();
+        SetWeekDays();
     }
+    
+    private void SetWeekDays()
+    {
+        foreach (string day in WeekDays)
+        {
+            WeekDaysGrid.Children.Add(new Label 
+            { 
+                Content = day,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                FontWeight = FontWeights.Bold
+            });
+        }
+    }
+    
 }

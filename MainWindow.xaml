@@ -8,5 +8,41 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" /> <!-- Commands -->
+                <RowDefinition Height="Auto" /> <!-- Week days -->
+                <RowDefinition Height="*"/>  <!-- Dates -->
+            </Grid.RowDefinitions>
+            
+            
+            
+            <!-- COMMANDS PANEL -->
+            <Grid >
+                <Label> INPUTS </Label>
+            </Grid>
+            
+            
+            <!-- Week days -->
+            <Border Grid.Row="1"
+                Background="LightBlue"
+                BorderThickness="0, 1, 0, 1"
+                BorderBrush="Black" 
+                >
+                <UniformGrid Columns="7" Rows="1" x:Name="WeekDaysGrid" />
+            </Border>
+            <!-- Dates -->
+            
+            <Grid x:Name="CalendarGrid" Grid.Row="2">
+                <Label> Dates </Label>
+            </Grid>
+            
+            
+            
+            
+        </Grid>
+        
+        
+        
     </Grid>
 </Window>
