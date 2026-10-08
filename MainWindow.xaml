@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:IxtlanCalendar"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Ixtlan Calendar" Height="450" Width="800"
+        Background="#F6F6F6"
+        Icon="/calendar.ico"
+        >
     <Grid Margin="10">
 
         <Grid>
@@ -99,11 +102,12 @@
                     <TextBox Grid.Column="0"
                              x:Name="FullDateTextBox"
                              Width="150"
-                             mah:TextBoxHelper.Watermark="-- Enter Custom Date --" 
+                             mah:TextBoxHelper.Watermark="-- Enter Custom Date --"
                              TextAlignment="Center"
                              VerticalContentAlignment="Center"
                              HorizontalContentAlignment="Center"
-                              />
+                             TextChanged="FullDateTextBox_OnTextChanged" />
+                    
                     <TextBlock Grid.Column="1"
                                Text="ℹ"
                                
@@ -112,7 +116,7 @@
                                HorizontalAlignment="Center"
 
                                Margin="6,0,0,0"
-                               ToolTip="Enter Date &#x0a;Format: 20.04.2026"
+                               ToolTip="Enter Custom Date &#x0a;Format: DD.MM.YYYY"
                                Cursor="Help" />
                 </Grid>
             </Grid>
@@ -120,11 +124,76 @@
             
             <!-- Week days -->
             <Border Grid.Row="1"
-                Background="LightBlue"
+                Background="#4ECDC4"
                 BorderThickness="0, 1, 0, 1"
                 BorderBrush="Black" 
                 >
-                <UniformGrid Columns="7" Rows="1" x:Name="WeekDaysGrid" />
+                <!-- <UniformGrid Columns="7" Rows="1" x:Name="WeekDaysGrid" /> -->
+                <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                            
+                    
+            <Label
+                Grid.Row="0" Grid.Column="0"
+                Content="Mon"
+                HorizontalContentAlignment="Center"
+                HorizontalAlignment="Center"
+                VerticalContentAlignment="Center"
+                FontWeight="Bold"  />
+            <Label
+                Grid.Row="0" Grid.Column="1"
+                Content="Tue"
+                HorizontalContentAlignment="Center"
+                HorizontalAlignment="Center"
+                VerticalContentAlignment="Center"
+                FontWeight="Bold"  />
+            <Label
+                Grid.Row="0" Grid.Column="2"
+                Content="Wed"
+                HorizontalContentAlignment="Center"
+                HorizontalAlignment="Center"
+                VerticalContentAlignment="Center"
+                FontWeight="Bold"  />
+            <Label
+                Grid.Row="0" Grid.Column="3"
+                Content="Thu"
+                HorizontalContentAlignment="Center"
+                HorizontalAlignment="Center"
+                VerticalContentAlignment="Center"
+                FontWeight="Bold"  />
+            <Label
+                Grid.Row="0" Grid.Column="4"
+                Content="Fri"
+                HorizontalContentAlignment="Center"
+                HorizontalAlignment="Center"
+                VerticalContentAlignment="Center"
+                FontWeight="Bold"  />
+            <Label
+                Grid.Row="0" Grid.Column="5"
+                Content="Sat"
+                HorizontalContentAlignment="Center"
+                HorizontalAlignment="Center"
+                VerticalContentAlignment="Center"
+                FontWeight="Bold"  />
+            <Label
+                Grid.Row="0" Grid.Column="6"
+                Content="Sun"
+                HorizontalContentAlignment="Center"
+                HorizontalAlignment="Center"
+                VerticalContentAlignment="Center"
+                FontWeight="Bold"  />
+            </Grid>
             </Border>
             
             <!-- Dates -->
