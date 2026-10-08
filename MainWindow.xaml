@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IxtlanCalendar"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="10">
@@ -17,7 +18,7 @@
             
             
             
-            <!-- COMMANDS PANEL -->
+            <!-- COMMANDS PANEL 
             <Grid >
                 <Border Width="200" Height="100">
                     <Border.Background>
@@ -29,6 +30,91 @@
                         </LinearGradientBrush>
                     </Border.Background>
                 </Border>
+            </Grid>
+            -->
+            
+            <Grid Grid.Row="0" 
+                  Margin="0,0,0,10"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Center"
+                  
+                  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <ComboBox Grid.Row="0" Grid.Column="0" x:Name="MonthComboBox"
+                             IsEditable="True"
+                             IsReadOnly="True"
+                             VerticalContentAlignment="Center"
+                             HorizontalContentAlignment="Center"
+                             Width="200"
+                             SelectionChanged="MonthComboBox_OnSelectionChanged"
+                             Margin="0,0,10,0"
+                             mah:TextBoxHelper.Watermark="-- Select Month --" 
+                >
+                    <ComboBoxItem Content="January" />
+                    <ComboBoxItem Content="February" />
+                    <ComboBoxItem Content="March" />
+                    <ComboBoxItem Content="April" />
+                    <ComboBoxItem Content="May" />
+                    <ComboBoxItem Content="June" />
+                    <ComboBoxItem Content="July" />
+                    <ComboBoxItem Content="August" />
+                    <ComboBoxItem Content="September" />
+                    <ComboBoxItem Content="October" />
+                    <ComboBoxItem Content="November" />
+                    <ComboBoxItem Content="December" />
+                </ComboBox>
+                
+                <TextBox Grid.Row="0" Grid.Column="1"
+                         Width="100"
+                         mah:TextBoxHelper.Watermark="-- Enter Year --" 
+                         x:Name="YearTextBox"
+                         TextAlignment="Center"
+                         VerticalContentAlignment="Center"
+                         TextChanged="YearTextBox_OnTextChanged"
+                         PreviewTextInput="YearTextBox_PreviewTextInput" />
+                
+                <Label Grid.Column="3"
+                       x:Name="MonthYearLabel"
+                       FontWeight="Bold"
+                       FontSize="14"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       />
+                
+                <!-- New small grid for date input and custom tooltip -->
+                <Grid Grid.Column="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0"
+                             x:Name="FullDateTextBox"
+                             Width="150"
+                             mah:TextBoxHelper.Watermark="-- Enter Custom Date --" 
+                             TextAlignment="Center"
+                             VerticalContentAlignment="Center"
+                             HorizontalContentAlignment="Center"
+                              />
+                    <TextBlock Grid.Column="1"
+                               Text="ℹ"
+                               
+                               Foreground="DodgerBlue"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+
+                               Margin="6,0,0,0"
+                               ToolTip="Enter Date &#x0a;Format: 20.04.2026"
+                               Cursor="Help" />
+                </Grid>
             </Grid>
             
             

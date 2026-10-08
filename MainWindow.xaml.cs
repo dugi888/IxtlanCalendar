@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -79,4 +80,24 @@ public partial class MainWindow : Window
 
     }
     
+    private void YearTextBox_OnTextChanged(object sender, TextChangedEventArgs e) => UpdateCalendar();
+    private void MonthComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateCalendar();
+    
+    
+    private void YearTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+    {
+        // Get whole input field text as this event only returns the new input character. 
+        // Append the new char to text before.
+        TextBox textBox = (TextBox)sender;
+        string wholeText = textBox.Text + e.Text;
+        e.Handled = !Regex.IsMatch(wholeText, new Regex("^\\d{1,4}$").ToString()); //  Allow only digits and up to 4
+    }
+
+
+
+    private void UpdateCalendar()
+    {
+        throw new NotImplementedException();
+    }
+
 }
