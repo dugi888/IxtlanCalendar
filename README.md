@@ -12,8 +12,10 @@ This is how many hours I worked per task:
 - Polishing, refactoring etc - TBA
 
 
-## Packages and palette used:
-*Packages*:
+## Other:
+**Packages**:
 - MahApps.Metro for placeholders and UI
 
-*Palette:* Serene Dusk from https://piktochart.com/blog/blue-dark-red-color-palette/
+**Palette:** Serene Dusk from https://piktochart.com/blog/blue-dark-red-color-palette/
+
+**Icon** - https://www.flaticon.com/free-icon/calendar_2864882
