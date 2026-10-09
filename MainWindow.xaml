@@ -92,7 +92,12 @@
                              TextAlignment="Center"
                              VerticalContentAlignment="Center"
                              HorizontalContentAlignment="Center"
-                             TextChanged="FullDateTextBox_OnTextChanged" />
+                             PreviewTextInput="FullDateTextBox_OnPreviewTextInput"
+                             TextChanged="FullDateTextBox_OnTextChanged" >
+                        <TextBox.Text>
+                            <Binding Path="FullDateInput" UpdateSourceTrigger="PropertyChanged" />
+                        </TextBox.Text>
+                    </TextBox>
                     
                     <TextBlock Grid.Column="1"
                                Text="ℹ"

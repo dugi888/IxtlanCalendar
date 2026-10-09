@@ -1,6 +1,6 @@
 namespace IxtlanCalendar;
 
-public enum Months
+public enum Month
 {
     January = 1,
     February = 2,

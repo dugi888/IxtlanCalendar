@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text.Json;
+using System.Windows;
 
 namespace IxtlanCalendar;
 
@@ -54,10 +55,19 @@ public class Helpers
     {
         try
         {
-            string json = File.ReadAllText("./holidays.json");
+            string json = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "holidays.json"));
             return JsonSerializer.Deserialize<Dictionary<string, List<Holiday>>>(json);
         }catch (Exception ex)
         {
+            var messageBoxText =
+                "Can't find 'holidays.json' file. The holidays won't be displayed.\n" +
+                "Make sure to provide this file in the same directory as the application.";
+            var caption = "Warning";
+            var button = MessageBoxButton.OK;
+            var icon = MessageBoxImage.Warning;
+            var messageBoxResult = MessageBox.Show(messageBoxText, caption, button, icon);
+
+            
             Console.WriteLine($"Error loading holidays: {ex.Message}");
             return new Dictionary<string, List<Holiday>>();
         }

@@ -9,8 +9,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static IxtlanCalendar.Months;
+using static IxtlanCalendar.Month;
 using static IxtlanCalendar.Helpers;
+using static IxtlanCalendar.DateValidationRule;
 
 namespace IxtlanCalendar;
 
@@ -20,17 +21,28 @@ namespace IxtlanCalendar;
 public partial class MainWindow : Window
 {
     private int SelectedYear { get; set; } 
-    private static Months SelectedMonth { get; set; }
+    private static Month SelectedMonth { get; set; }
 
     private static Dictionary<string, List<Holiday>> Holidays { get; set; } = new Dictionary<string, List<Holiday>>();
+
+    private string _fullDateInput;
+    public string FullDateInput
+    {
+        get => _fullDateInput;
+        set { _fullDateInput = value; }
+    }
+    ValidationRule DateValidationRule { get; set; }
 
     public MainWindow()
     {
         // Hardcoded current month and year
-        SelectedMonth = Months.October; 
+        SelectedMonth = Month.October; 
         SelectedYear = 2026;
         
         InitializeComponent();
+        
+        DataContext = this;
+        DateValidationRule = new DateValidationRule();
         
         Holidays = LoadHolidays();
         
@@ -127,7 +139,7 @@ public partial class MainWindow : Window
         // Append the new char to text before.
         TextBox textBox = (TextBox)sender;
         string wholeText = textBox.Text + e.Text;
-        e.Handled = !Regex.IsMatch(wholeText, new Regex("^\\d{1,4}$").ToString()); //  Allow only digits and up to 4
+        e.Handled = !Regex.IsMatch(wholeText, "^\\d{1,4}$"); //  Allow only digits and up to 4
     }
 
 
@@ -136,7 +148,7 @@ public partial class MainWindow : Window
     {
         if (Int32.TryParse(YearTextBox.Text, out int year)) SelectedYear = year;
         
-        if(Enum.TryParse((MonthComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString(), out Months month)) SelectedMonth  = month;
+        if(Enum.TryParse((MonthComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString(), out Month month)) SelectedMonth  = month;
         
         
         PopulateDatesGrid();
@@ -146,13 +158,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            // if(month < 1 || month > 12)
-            // {
-            //     // TODO: Display an error message to the user in the UI instead of just logging to console.
-            //     Console.WriteLine($"INPUT ERROR: Invalid month value: {month}. Please select a valid month.");
-            //     return;
-            // }
-            Months monthEnum = (Months)month;
+            Month monthEnum = (Month)month;
             SelectedYear = year;
             SelectedMonth = monthEnum;
             PopulateDatesGrid();
@@ -167,70 +173,41 @@ public partial class MainWindow : Window
     {
         var textBox = (TextBox)sender;
         string input = textBox.Text;
-
-        // Clear any previous error
-        textBox.ClearValue(TextBox.BorderBrushProperty);
-        textBox.ToolTip = null;
-
-        if (string.IsNullOrWhiteSpace(input))
-            return;
-
+        
         // Require full "DD.MM.YYYY" before parsing
         if (input.Length < 10)
             return;
 
+        ValidationResult result = DateValidationRule.Validate(input, System.Globalization.CultureInfo.CurrentCulture);
+        var be = BindingOperations.GetBindingExpressionBase(textBox, TextBox.TextProperty);
+        var error = new ValidationError(DateValidationRule, be)
+        {
+            ErrorContent = result.ErrorContent
+        };
+        
+        if (!result.IsValid)
+        {
+            Validation.MarkInvalid(be, error);
+            return;
+        }
+        
         string[] dayMonthYear = input.Split('.');
-
-        // Validations
-        // --------------------------------------------------------------------------
-        if (dayMonthYear.Length != 3
-            || !int.TryParse(dayMonthYear[0], out int day)
-            || !int.TryParse(dayMonthYear[1], out int month)
-            || !int.TryParse(dayMonthYear[2], out int year)) {
-            ShowError(textBox, "Format must be DD.MM.YYYY");
-            return;
-        }
-
-        if (month < 1 || month > 12) {
-            ShowError(textBox, "Month must be between 1 and 12.");
-            return;
-        }
-
-        if (day < 1 || day > 31) {
-            ShowError(textBox, "Day must be between 1 and 31.");
-            return;
-        }
-
-        if (year < 1 || year > 9999) {
-            ShowError(textBox, "Year is out of range. (1-9999)");
-            return;
-        }
+        int.TryParse(dayMonthYear[2], out int year);
+        int.TryParse(dayMonthYear[1], out int month);
         
-        if(IsLeapYear(year) && month == 2 && day > 29)
-        {
-            ShowError(textBox, "February has only 29 days in a leap year.");
-            return;
-        }
-        if(!IsLeapYear(year) && month == 2 && day > 28)
-        {
-            ShowError(textBox, "February has only 28 days in a non-leap year.");
-            return;
-        }
-        if((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
-        {
-            ShowError(textBox, $"{month} has only 30 days.");
-            return;
-        }
-        // --------------------------------------------------------------------------
-        
-
         UpdateCalendar(year, month);
     }
 
-    private static void ShowError(TextBox tb, string message)
+    private void FullDateTextBox_OnPreviewTextInput(object sender, TextCompositionEventArgs e)
     {
-        tb.BorderBrush = Brushes.Red;
-        tb.BorderThickness = new Thickness(2);
-        tb.ToolTip = message;
+        var textBox = (TextBox)sender;
+        string wholeText = textBox.Text + e.Text;
+        if(wholeText.Length > 10) // Limit to 10 characters (DD.MM.YYYY)
+        {
+            e.Handled = true;
+            return;
+        }  
+        e.Handled = !Regex.IsMatch(wholeText, @"^[\d.]+$"); // Only digits and '.'
+        
     }
 }
