@@ -22,6 +22,7 @@ public partial class MainWindow : Window
     private int SelectedYear { get; set; } 
     private static Months SelectedMonth { get; set; }
 
+    private static Dictionary<string, List<Holiday>> Holidays { get; set; } = new Dictionary<string, List<Holiday>>();
 
     public MainWindow()
     {
@@ -30,6 +31,8 @@ public partial class MainWindow : Window
         SelectedYear = 2026;
         
         InitializeComponent();
+        
+        Holidays = LoadHolidays();
         
         PopulateDatesGrid();
 
@@ -48,32 +51,61 @@ public partial class MainWindow : Window
         int firstDayOfMonth = GetDayOfWeekZeller(1,(int) SelectedMonth, SelectedYear);
         int daysInMonth = GetNumberOfDaysInMonth((int) SelectedMonth, SelectedYear);
 
+        
+        
+        bool hasHoliday = Holidays.ContainsKey(SelectedMonth.ToString().ToLowerInvariant());
+        List<Holiday>? holidaysInCurrentMonth = new List<Holiday>();
+        if (hasHoliday) Holidays.TryGetValue(SelectedMonth.ToString().ToLowerInvariant(), out holidaysInCurrentMonth);
+        
+        
         int currentDay = 1;
         
         for(int i = 0; i < 6; i++) // 6 weeks
         {
             for(int j = 0; j < 7; j++) // 7 days
             {
-                if(i == 0 && j < firstDayOfMonth)
+                if(i == 0 && j < firstDayOfMonth) // Skip weekdays before the 1st of the month
                 {
                     DatesGrid.Children.Add(new Label());
                 }
                 else if(currentDay <= daysInMonth)
                 {
+                    // Check if current day is a holiday. If it's reapeatable, show them only for 2026 (current year).
+                    bool isHoliday =  holidaysInCurrentMonth != null ? holidaysInCurrentMonth
+                        .Any(h => h.Day == currentDay && (h.Repeating || SelectedYear == 2026)) : false;
+                    
                     DatesGrid.Children.Add(new Border
                     {
                         BorderBrush = Brushes.LightGray,
                         BorderThickness = new Thickness(0.5),
-                        Background = j == 6
-                            ? (Brush)new BrushConverter().ConvertFromString("#FF6F61")
-                            : (Brush)new BrushConverter().ConvertFromString("#F6F6F6"), // Highlight Sundays
+                        Background =  isHoliday
+                                ? new LinearGradientBrush // Holiday color
+                                {
+                                    StartPoint = new Point(0, 0),
+                                    EndPoint = new Point(1, 1),
+                                    GradientStops = new GradientStopCollection
+                                    {
+                                        new GradientStop((Color)ColorConverter.ConvertFromString("#9B1B30"), 0),
+                                        new GradientStop((Color) ColorConverter.ConvertFromString("#F6F6F6"), 0.4),
+                                        new GradientStop((Color) ColorConverter.ConvertFromString("#F6F6F6"), 0.6),
+                                        new GradientStop((Color)ColorConverter.ConvertFromString("#9B1B30"), 1)
+                                    }
+                                        
+                                }
+                                : j == 6
+                                    ? (Brush)new BrushConverter().ConvertFromString("#FF6F61") // Highlight Sundays 
+                            : (Brush)new BrushConverter().ConvertFromString("#F6F6F6"),  // Default
                         
                         Child = new Label
                         {
                             Content = currentDay.ToString(),
                             HorizontalContentAlignment = HorizontalAlignment.Center,
                             VerticalContentAlignment = VerticalAlignment.Center,
-                            FontSize = 16
+                            FontSize = 16,
+                            ToolTip = isHoliday
+                                ? holidaysInCurrentMonth.First(h => h.Day == currentDay).Name
+                                : null
+                            
                         }
                     });
                     currentDay++;
@@ -102,20 +134,9 @@ public partial class MainWindow : Window
 
     private void UpdateCalendar()
     {
-        bool isValidYear = Int32.TryParse(YearTextBox.Text, out int year);
-        if (isValidYear) SelectedYear = year;
-        else Console.WriteLine($"CAST ERROR: Invalid year input: {YearTextBox.Text}. Please enter a valid year.");
+        if (Int32.TryParse(YearTextBox.Text, out int year)) SelectedYear = year;
         
-        bool isValidMonth = Enum.TryParse((MonthComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString(), out Months month);
-        if(isValidMonth) SelectedMonth  = month;
-        else Console.WriteLine("CAST ERROR: Invalid month selection. Please select a valid month.");
-        
-        if(month < Months.January || month > Months.December)
-        {
-            // TODO: Display an error message to the user in the UI instead of just logging to console.
-            Console.WriteLine($"INPUT ERROR: Invalid month value: {month}. Please select a valid month.");
-            return;
-        }
+        if(Enum.TryParse((MonthComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString(), out Months month)) SelectedMonth  = month;
         
         
         PopulateDatesGrid();
@@ -160,6 +181,8 @@ public partial class MainWindow : Window
 
         string[] dayMonthYear = input.Split('.');
 
+        // Validations
+        // --------------------------------------------------------------------------
         if (dayMonthYear.Length != 3
             || !int.TryParse(dayMonthYear[0], out int day)
             || !int.TryParse(dayMonthYear[1], out int month)
@@ -179,12 +202,26 @@ public partial class MainWindow : Window
         }
 
         if (year < 1 || year > 9999) {
-            ShowError(textBox, "Year is out of range.");
+            ShowError(textBox, "Year is out of range. (1-9999)");
             return;
         }
         
-        // TODO: Check if day is valid for the given month and year.
-        // TODO: Delimiter '.' add automatically while user types 
+        if(IsLeapYear(year) && month == 2 && day > 29)
+        {
+            ShowError(textBox, "February has only 29 days in a leap year.");
+            return;
+        }
+        if(!IsLeapYear(year) && month == 2 && day > 28)
+        {
+            ShowError(textBox, "February has only 28 days in a non-leap year.");
+            return;
+        }
+        if((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
+        {
+            ShowError(textBox, $"{month} has only 30 days.");
+            return;
+        }
+        // --------------------------------------------------------------------------
         
 
         UpdateCalendar(year, month);

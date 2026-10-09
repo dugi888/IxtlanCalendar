@@ -1,0 +1,55 @@
+{
+  "january": [
+    {
+      "day": 1,
+      "name": "New Year's Day",
+      "repeating": true
+    },
+    {
+      "day": 2,
+      "name": "New Year's Day",
+      "repeating": true
+    }    
+  ],
+  "april":[
+    {
+      "day": 5,
+      "name": "Easter Sunday",
+      "repeating": false
+    },
+    {
+      "day": 6,
+      "name": "Easter Monday",
+      "repeating": false
+    },
+    {
+      "day": 27,
+      "name": "Day of Resistance Against the Occupier",
+      "repeating": true
+    }
+  ],
+  "may": [
+    {
+      "day": 1,
+      "name": "Labour Day",
+      "repeating": true
+    },
+    {
+      "day": 2,
+      "name": "Labour Day",
+      "repeating": true
+    }
+  ],
+  "december": [
+    {
+      "day": 25,
+      "name": "Christmas Day",
+      "repeating": true
+    },
+    {
+      "day": 26,
+      "name": "Day of independence and unity",
+      "repeating": true
+    }
+  ]
+}

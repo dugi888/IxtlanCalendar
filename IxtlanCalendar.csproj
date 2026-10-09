@@ -14,5 +14,10 @@
     <ItemGroup>
         <Resource Include="calendar.ico" />
     </ItemGroup>
-
+    <ItemGroup>
+        <Content Include="holidays.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    
 </Project>

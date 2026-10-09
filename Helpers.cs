@@ -1,10 +1,15 @@
+using System.IO;
+using System.Text.Json;
+
 namespace IxtlanCalendar;
+
+using static IxtlanCalendar.Holiday;
 
 public class Helpers
 {
     public static int GetNumberOfDaysInMonth(int month, int year)
     {
-        bool isLeapYear  = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0); 
+        bool isLeapYear  = IsLeapYear(year); 
         switch (month)
         {
             case 1: 
@@ -41,6 +46,21 @@ public class Helpers
         int centuryZero = year / 100;
         int d = (day + (13 * (month + 1) / 5) + yearOfCentury + (yearOfCentury / 4) + (centuryZero / 4) - 2 * centuryZero) % 7;
         return (d + 5) % 7; // Adjusting to make Monday = 0, Sunday = 6 for easier calculation onwards
+        
+    }
+    public static bool IsLeapYear(int year) => year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+ 
+    public static Dictionary<string, List<Holiday>> LoadHolidays()
+    {
+        try
+        {
+            string json = File.ReadAllText("./holidays.json");
+            return JsonSerializer.Deserialize<Dictionary<string, List<Holiday>>>(json);
+        }catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading holidays: {ex.Message}");
+            return new Dictionary<string, List<Holiday>>();
+        }
         
     }
 }
