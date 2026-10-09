@@ -8,7 +8,9 @@ This is how many hours I worked per task:
   - Starting idea (algorithm) was fine, but had to learn how the grid is working in WPF
 - Control fields (month, year, full date) logic - ~4h
   - Full date field was the hardest, there is a lot of validation and processing.
-- Importing holidays file and displaying - TBA
+- Importing holidays file and displaying - 2h
+  - Used simplified version of JSON with few months. Only April has non repeatable holiday (Easter, as it is not on fixed date).
+  - Non-repeatable holidays are displayed only for 2026 year. It is hardcoded.
 - Polishing, refactoring etc - TBA
 
 

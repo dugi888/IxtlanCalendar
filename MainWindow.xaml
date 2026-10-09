@@ -21,21 +21,7 @@
             
             
             
-            <!-- COMMANDS PANEL 
-            <Grid >
-                <Border Width="200" Height="100">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="Red" Offset="0"/>
-                            <GradientStop Color="White" Offset="0.40"/>
-                            <GradientStop Color="White" Offset="0.60"/>
-                            <GradientStop Color="Red" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
-                </Border>
-            </Grid>
-            -->
-            
+            <!-- COMMANDS PANEL  -->
             <Grid Grid.Row="0" 
                   Margin="0,0,0,10"
                   HorizontalAlignment="Stretch"
